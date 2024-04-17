@@ -1,3 +1,4 @@
 DrissionPage~=4.0.4.21
 requests~=2.31.0
 urllib3~=1.26.18
+pyvirtualdisplay~=3.0
