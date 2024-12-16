@@ -1,12 +1,13 @@
 # 第一次运行，需要把下方放开，或者手动终端执行`pip install -r requirements.txt`
-import os
+import getpass
 # os.system("pip install -r requirements.txt")
 import json
-import getpass
-import time
+import os
 import platform
+import time
+import urllib.request
 from time import sleep
-from subprocess import run, PIPE
+
 from nuoyis_webautomatic_function import lianwang
 
 if __name__ == "__main__":
@@ -63,25 +64,25 @@ if __name__ == "__main__":
         cnt = 1
         while True:
             print(f"检测时间:{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}\n", end='')
-            if sys == "Linux":
-                nuoyis_ping_shell = "ping -c 4 www.baidu.com"
-            elif sys == "Windows":
-                nuoyis_ping_shell = "ping www.baidu.com"
-            r = run(nuoyis_ping_shell,
-                    stdout=PIPE,
-                    stderr=PIPE,
-                    stdin=PIPE,
-                    shell=True)
-            if r.returncode:
-                print('登录状态：异常 登录次数:{}次'.format(cnt), end='')
+
+
+            url = "https://www.baidu.com"
+            try:
+                response = urllib.request.urlopen(url)
+                if response.status == 200:
+                    print("登录状态:正常")
+                    print("十分钟后会自动更新", end='')
+                    sleep(60 * 10)  # 每十分钟检查一次
+                else:
+                    raise Exception
+            except Exception as e:
+                print("网页打开失败,错误代码:", e)
+                print("正在重新登录")
                 nuo.login(xiaoyuanurl, xiaoyuanusername, xiaoyuanpassword, logout, login_user, login_password,
                           login_check)
                 print('未检测到后台异常，登录请求:成功')
                 cnt += 1
-            else:
-                print("登录状态:正常")
-                print("十分钟后会自动更新", end='')
-                sleep(60 * 10)  # 每十分钟检查一次
+
     else:
         nuo.login(xiaoyuanurl, xiaoyuanusername, xiaoyuanpassword, logout, login_user, login_password, login_check)
         print('未检测到后台异常，登录请求:成功')

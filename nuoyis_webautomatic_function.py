@@ -4,7 +4,7 @@ import time
 import urllib3
 import platform
 from pyvirtualdisplay import Display
-from DrissionPage import ChromiumOptions, ChromiumPage
+from DrissionPage import ChromiumOptions, Chromium
 from pyvirtualdisplay.abstractdisplay import XStartError
 
 
@@ -65,6 +65,7 @@ class lianwang:
         self.options.set_argument('--no-sandbox')
         self.options.headless(True)
         self.options.set_argument('--disable-gpu')
+        self.options.set_argument('--hide-crash-restore-bubble')
         self.options.set_argument('--ignore-certificate-errors')
 
     def openurl(self, url):
@@ -74,7 +75,8 @@ class lianwang:
         try:
             self.options = ChromiumOptions()
             self.touoptions()
-            self.page = ChromiumPage(self.options)
+            self.openbrowser = Chromium(self.options)
+            self.page = self.openbrowser.new_tab()
         except FileNotFoundError:
             if self.sys == "Windows":
                 print("检测到你的系统是windows,未下载chrome,正在打开官网")
@@ -118,6 +120,6 @@ class lianwang:
         #     exit(1)
 
     def closeurl(self):
-        self.page.close()
+        self.openbrowser.quit()
         if self.sys == "Linux":
             self.display.stop()
