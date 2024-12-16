@@ -1,0 +1,1 @@
+pyinstaller -F main.py -i main.ico -n "nuoyis kuandai"
